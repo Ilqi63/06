@@ -2,32 +2,40 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Dynamic Table Rendering</title>
+    <title>Dynamic Render Table & List</title>
     <style>
-        /* CSS: Memisahkan tampilan dari logika */
-        body { font-family: sans-serif; padding: 20px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+        section { margin-bottom: 40px; }
+        
+        /* CSS Tabel */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
         th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
         th { background-color: #f4f4f4; }
+
+        /* CSS List */
+        ul { padding-left: 20px; }
+        li { padding: 5px 0; border-bottom: 1px solid #eee; }
     </style>
 </head>
 <body>
 
-    <h2>Data Mahasiswa (Render Otomatis)</h2>
-    
-    <table id="tabel-data">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nama</th>
-            </tr>
-        </thead>
-        <tbody id="body-tabel">
-            </tbody>
-    </table>
+    <section>
+        <h2>1. Tampilan Tabel</h2>
+        <table id="tabel-data">
+            <thead>
+                <tr><th>ID</th><th>Nama</th></tr>
+            </thead>
+            <tbody id="body-tabel"></tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>2. Tampilan List</h2>
+        <ul id="list-data"></ul>
+    </section>
 
     <script>
-        // 1. DATA (Modular: Data dipisah dari tampilan)
+        // 1. DATA (Satu sumber data untuk semuanya)
         const dataMahasiswa = [
             { id: 1, nama: "Satu" },
             { id: 2, nama: "Dua" },
@@ -35,20 +43,30 @@
             { id: 4, nama: "Empat" }
         ];
 
-        // 2. FUNGSI RENDER (DRY & Reuse: Cukup tulis satu kali)
-        // Fungsi ini bisa digunakan kembali untuk table lain
-        function generateRows(items) {
-            return items.map(item => `
+        // 2. FUNGSI RENDER (Reusable Logic)
+        
+        // Render untuk Tabel
+        const renderTable = (items) => {
+            const container = document.getElementById('body-tabel');
+            container.innerHTML = items.map(item => `
                 <tr>
                     <td>${item.id}</td>
                     <td>${item.nama}</td>
                 </tr>
             `).join('');
-        }
+        };
 
-        // 3. EKSEKUSI (Scalable: Jika data bertambah, fungsi ini tetap sama)
-        const container = document.getElementById('body-tabel');
-        container.innerHTML = generateRows(dataMahasiswa);
+        // Render untuk List (Prinsip Reuse)
+        const renderList = (items) => {
+            const container = document.getElementById('list-data');
+            container.innerHTML = items.map(item => `
+                <li>ID: ${item.id} - Nama: <strong>${item.nama}</strong></li>
+            `).join('');
+        };
+
+        // 3. EKSEKUSI
+        renderTable(dataMahasiswa);
+        renderList(dataMahasiswa);
     </script>
 </body>
 </html>
